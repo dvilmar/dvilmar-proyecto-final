@@ -14,10 +14,10 @@ El desarrollo de toda Aplicación Web requiere seguir un [proceso estructurado](
 
 # Título del Proyecto
 
-#### Curso Escolar 20XX-20XX
-#### Autor: [Nombre del alumno autor](Enlace a su cuenta de gitHub)
-#### Tutor: [Nombre del profesor tutor](Enlace a su cuenta de gitHub)
-#### Fecha de Inicio: DD-MM-YYYY
+#### Curso Escolar 2024-2025
+#### Autor: [https://github.com/dvilmar]
+#### Tutor: [https://github.com/monicamg12]
+#### Fecha de Inicio: 14-03-2025
 #### Fecha de Finalización: DD-MM-YYYY
 
 ## Breve descripción del proyecto
