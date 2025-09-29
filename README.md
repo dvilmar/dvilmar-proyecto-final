@@ -1,10 +1,10 @@
-# Título del Proyecto
+# BookMyCut
 
-#### Curso Escolar 2024-2025
+#### Curso Escolar 2025-2026
 #### Autor: [https://github.com/dvilmar]
-#### Tutor: [https://github.com/monicamg12]
-#### Fecha de Inicio: 14-03-2025
-#### Fecha de Finalización: DD-MM-YYYY
+#### Tutor: [https://github.com/leyvapaco
+#### Fecha de Inicio: 15-09-2025
+#### Fecha de Finalización: 01-12-2025
 
 ## Breve descripción del proyecto
 
