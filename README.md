@@ -8,7 +8,7 @@
 
 ## Breve descripción del proyecto
 
-Como propuesta de proyecto tengo el objetivo de desarrollar una aplicación web llamada BookMyCut se trata de una aplicación pensada para que peluquerías o centros de estética sean capaces de gestionar sus reservas de manera online y también proporcionar información sobre los servicios que ofrezcan,
+Como propuesta de proyecto tengo el objetivo de desarrollar una aplicación web llamada BookMyCut se trata de una aplicación pensada para que peluquerías o centros de estética sean capaces de gestionar sus reservas de manera online y también proporcionar información sobre los servicios que ofrezcan.
 
 La aplicación permitirá a los clientes reservar citas con estilistas, gestionar su perfil, recibir recordatorios de citas próximas y etc. El sistema contará con diferentes roles, como clientes, estilistas y administradores, cada uno con acceso a funcionalidades específicas. Los administradores tendrán la capacidad de gestionar al resto de usuarios, las citas y la disponibilidad de los estilistas, las fechas disponibles de la peluquería y más. Los clientes podrán gestionar sus citas, cancelarlas y modificar sus datos personales. Los estilistas podrán especificar  los servicios que ofrecen y consultar las citas programadas en el calendario.
 
