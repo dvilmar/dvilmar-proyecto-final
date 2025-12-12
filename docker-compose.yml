@@ -1,0 +1,68 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bookmycut-mysql
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-bookmycut}
+      MYSQL_USER: ${MYSQL_USER:-bookmycut}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-bookmycut}
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./src/backend/src/main/resources/data.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+    networks:
+      - bookmycut-network
+
+  backend:
+    build: ./src/backend
+    container_name: bookmycut-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-bookmycut}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8
+      DB_USER: ${MYSQL_USER:-bookmycut}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-bookmycut}
+      DB_DRIVER: com.mysql.cj.jdbc.Driver
+
+      SERVER_PORT: 8080
+      SERVER_CONTEXT_PATH: ${SERVER_CONTEXT_PATH:-/api}
+
+      JWT_SECRET: ${JWT_SECRET:-bookmycut-super-secret-key-minimum-32-chars-for-hs256-algorithm-security}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200}
+
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-false}
+      JPA_FORMAT_SQL: ${JPA_FORMAT_SQL:-false}
+      # Desactivar inicialización de Spring Boot en Docker (MySQL ya ejecuta los scripts)
+      SQL_INIT_MODE: never
+    depends_on:
+      - mysql
+    networks:
+      - bookmycut-network
+
+  frontend:
+    build: ./src/frontend
+    container_name: bookmycut-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-4200}:80"
+    depends_on:
+      - backend
+    networks:
+      - bookmycut-network
+
+networks:
+  bookmycut-network:
+
+volumes:
+  mysql_data:

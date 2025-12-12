@@ -1,0 +1,116 @@
+<div class="calendar-container">
+  <!-- Header con controles -->
+  <div class="calendar-header">
+    <div class="calendar-header-top">
+      <h2 class="calendar-title">Calendario de Citas</h2>
+      <!-- Filtros -->
+      <div class="calendar-filters" *ngIf="currentUser">
+        <div class="filter-group" *ngIf="(currentUser?.rol === 'CLIENTE' || currentUser?.rol === 'ADMINISTRADOR') && estilistas.length > 0">
+          <label class="filter-label">Estilista</label>
+          <select class="filter-select" [value]="estilistaSeleccionadoId || ''" (change)="cambiarEstilista($event)">
+            <option value="">Todos</option>
+            <option *ngFor="let estilista of estilistas" [value]="estilista.usuarioId">
+              {{ estilista.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación del calendario -->
+    <div class="calendar-nav">
+      <button class="nav-btn" (click)="mesAnterior()" aria-label="Mes anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      
+      <div class="month-year-display">
+        <h3 class="month-year-text">{{ nombreMes }} {{ anio }}</h3>
+        <input 
+          type="month" 
+          class="month-input" 
+          [value]="getCurrentMonthValue()" 
+          (change)="cambiarMesDesdeInput($event)"
+          aria-label="Seleccionar mes">
+      </div>
+      
+      <button class="nav-btn" (click)="mesSiguiente()" aria-label="Mes siguiente">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Calendario -->
+  <div class="calendar-wrapper">
+    <div class="calendar-grid">
+      <!-- Días de la semana -->
+      <div class="calendar-weekdays">
+        <div class="weekday" *ngFor="let dia of diasSemana">{{ dia }}</div>
+      </div>
+
+      <!-- Días del mes -->
+      <div class="calendar-days">
+        <div 
+          *ngFor="let semana of semanas" 
+          class="calendar-week">
+          <div 
+            *ngFor="let dia of semana" 
+            class="calendar-day-cell"
+            [class.other-month]="dia === null"
+            [class.today]="esHoy(dia)"
+            [class.has-appointments]="dia && tieneCitas(dia)"
+            [class.not-available]="dia && !estaDisponible(dia)"
+            [class.available]="dia && estaDisponible(dia) && canCreateAppointment"
+            [class.disabled-day]="dia && (!canCreateAppointment || !estaDisponible(dia))"
+            (click)="seleccionarFecha(dia)"
+            [title]="dia ? (estaDisponible(dia) ? (canCreateAppointment ? 'Clic para reservar' : 'Ver citas') : getRazonNoDisponible(dia)) : ''">
+            
+            <div class="day-content">
+              <span class="day-number">{{ dia ? dia.getDate() : '' }}</span>
+              
+              <!-- Indicador de citas -->
+              <div class="appointments-indicator" *ngIf="dia && tieneCitas(dia)">
+                <div 
+                  *ngFor="let cita of getCitasDelDia(dia); let i = index" 
+                  class="appointment-dot"
+                  [class.confirmada]="cita.status === 'CONFIRMADA'"
+                  [class.cancelada]="cita.status === 'CANCELADA'"
+                  [class.finalizada]="cita.status === 'FINALIZADA'"
+                  (click)="verCita(cita.appointmentId); $event.stopPropagation()"
+                  [title]="cita.startTime + ' - ' + (currentUser?.rol === 'CLIENTE' ? cita.stylistName : cita.clientName) + ' (' + cita.status + ')'">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leyenda -->
+  <div class="calendar-legend">
+    <div class="legend-item">
+      <div class="legend-indicator available"></div>
+      <span>Disponible</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-indicator has-appointments"></div>
+      <span>Con citas</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-indicator not-available"></div>
+      <span>No disponible</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-indicator today"></div>
+      <span>Hoy</span>
+    </div>
+  </div>
+</div>
+
+
+
+

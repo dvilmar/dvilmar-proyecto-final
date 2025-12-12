@@ -1,0 +1,999 @@
+/* ============================================
+   Tema Minimalista Blanco y Negro - BookMyCut
+   ============================================ */
+
+:root {
+  --primary-black: #000000;
+  --secondary-black: #1a1a1a;
+  --tertiary-black: #333333;
+  --primary-white: #ffffff;
+  --secondary-white: #f8f9fa;
+  --tertiary-white: #e9ecef;
+  --text-primary: #000000;
+  --text-secondary: #4a4a4a;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --border-hover: #000000;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-primary);
+  background-color: var(--primary-white);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tema Oscuro */
+body.dark-theme {
+  --primary-black: #ffffff;
+  --secondary-black: #e0e0e0;
+  --tertiary-black: #424242;
+  --primary-white: #1a1a1a;
+  --secondary-white: #2d2d2d;
+  --tertiary-white: #3a3a3a;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #999999;
+  --border-color: #404040;
+  --border-hover: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  background-color: var(--primary-white);
+  color: var(--text-primary);
+}
+
+body.light-theme {
+  --primary-black: #000000;
+  --secondary-black: #1a1a1a;
+  --tertiary-black: #333333;
+  --primary-white: #ffffff;
+  --secondary-white: #f8f9fa;
+  --tertiary-white: #e9ecef;
+  --text-primary: #000000;
+  --text-secondary: #4a4a4a;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --border-hover: #000000;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+  background-color: var(--primary-white);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   Tipografía Minimalista
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.5rem; font-weight: 700; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Layout Responsive
+   ============================================ */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 576px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* ============================================
+   Botones Minimalistas
+   ============================================ */
+
+.btn {
+  font-weight: 500;
+  border-radius: 0;
+  border: 2px solid;
+  padding: 0.625rem 1.5rem;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-black);
+  border-color: var(--primary-black);
+  color: var(--primary-white);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--secondary-black);
+  border-color: var(--secondary-black);
+  color: var(--primary-white);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-outline-primary {
+  background-color: transparent;
+  border-color: var(--primary-black);
+  color: var(--primary-black);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--primary-black);
+  border-color: var(--primary-black);
+  color: var(--primary-white);
+}
+
+.btn-outline-secondary {
+  background-color: transparent;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--tertiary-white);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.btn-outline-danger {
+  background-color: transparent;
+  border-color: var(--text-secondary);
+  color: var(--text-secondary);
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--primary-white);
+}
+
+.btn-sm {
+  padding: 0.375rem 1rem;
+  font-size: 0.75rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ============================================
+   Cards Minimalistas
+   ============================================ */
+
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  background-color: var(--primary-white);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  margin-bottom: 1.5rem;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.card-header {
+  background-color: var(--secondary-white);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+/* ============================================
+   Formularios Minimalistas
+   ============================================ */
+
+.form-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--primary-white);
+  color: var(--text-primary);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-black);
+  box-shadow: 0 0 0 0.125rem rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.form-control:disabled {
+  background-color: var(--tertiary-white);
+  opacity: 0.6;
+}
+
+.form-check-input {
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-black);
+  border-color: var(--primary-black);
+}
+
+.form-check-input:focus {
+  border-color: var(--primary-black);
+  box-shadow: 0 0 0 0.125rem rgba(0, 0, 0, 0.15);
+}
+
+.text-danger {
+  color: #dc3545 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+body.dark-theme .text-danger {
+  color: #ff6b7a !important;
+}
+
+/* ============================================
+   Navbar Minimalista
+   ============================================ */
+
+.navbar {
+  background-color: var(--primary-white) !important;
+  border-bottom: 2px solid var(--primary-black);
+  padding: 1rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-black) !important;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.nav-link {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  transition: var(--transition);
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--primary-black) !important;
+}
+
+body.dark-theme .nav-link {
+  color: #cccccc !important;
+}
+
+body.dark-theme .nav-link:hover,
+body.dark-theme .nav-link.active,
+body.dark-theme .nav-link.router-link-active,
+body.dark-theme a.nav-link[routerlinkactive="active"] {
+  color: #ffffff !important;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background-color: var(--primary-black);
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.navbar-toggler {
+  border: 2px solid var(--primary-black);
+  border-radius: 0;
+  padding: 0.375rem 0.75rem;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ============================================
+   Tablas Minimalistas
+   ============================================ */
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead th {
+  background-color: var(--secondary-white);
+  border-bottom: 2px solid var(--primary-black);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+  padding: 1rem;
+  color: var(--text-primary);
+}
+
+.table tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: var(--secondary-white);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--secondary-white);
+}
+
+/* ============================================
+   Badges Minimalistas
+   ============================================ */
+
+.badge {
+  border-radius: 0;
+  padding: 0.375rem 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.75rem;
+}
+
+.bg-success {
+  background-color: var(--primary-black) !important;
+  color: var(--primary-white) !important;
+}
+
+.bg-danger {
+  background-color: var(--text-secondary) !important;
+  color: var(--primary-white) !important;
+}
+
+.bg-secondary {
+  background-color: var(--text-muted) !important;
+  color: var(--primary-white) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-black) !important;
+  color: var(--primary-white) !important;
+}
+
+.bg-info {
+  background-color: var(--tertiary-black) !important;
+  color: var(--primary-white) !important;
+}
+
+.bg-warning {
+  background-color: var(--text-secondary) !important;
+  color: var(--primary-white) !important;
+}
+
+/* ============================================
+   Alerts Minimalistas
+   ============================================ */
+
+.alert {
+  border-radius: 0;
+  border: 1px solid;
+  border-left: 4px solid;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.alert-info {
+  background-color: var(--secondary-white);
+  border-color: var(--border-color);
+  border-left-color: var(--tertiary-black);
+  color: var(--text-primary);
+}
+
+.alert-danger {
+  background-color: var(--secondary-white);
+  border-color: var(--border-color);
+  border-left-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.alert-success {
+  background-color: #f0f9f4;
+  border-color: #28a745;
+  border-left-color: #28a745;
+  color: #155724;
+}
+
+body.dark-theme .alert-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-color: #28a745;
+  border-left-color: #28a745;
+  color: #6cff8f;
+}
+
+/* ============================================
+   Utilidades Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .table {
+    font-size: 0.875rem;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  
+  .card-header {
+    padding: 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================
+   Accesibilidad
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--primary-black);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Mejora de contraste para accesibilidad */
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: var(--transition);
+}
+
+a:hover {
+  text-decoration-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   Spinners y Loading
+   ============================================ */
+
+.spinner-border {
+  border-width: 0.15em;
+  border-color: var(--primary-black);
+  border-right-color: transparent;
+}
+
+/* ============================================
+   List Groups
+   ============================================ */
+
+.list-group-item {
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 1rem 1.5rem;
+  transition: var(--transition);
+}
+
+.list-group-item:hover {
+  background-color: var(--secondary-white);
+  border-color: var(--border-hover);
+}
+
+.list-group-item-primary {
+  background-color: var(--secondary-white);
+  border-left: 4px solid var(--primary-black);
+}
+
+.list-group-item-light {
+  background-color: var(--primary-white);
+  opacity: 0.8;
+}
+
+/* ============================================
+   Invalid Feedback
+   ============================================ */
+
+.invalid-feedback {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.is-invalid {
+  border-color: var(--primary-black) !important;
+}
+
+/* ============================================
+   Visually Hidden (Screen Reader)
+   ============================================ */
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border-width: 0 !important;
+}
+
+/* ============================================
+   Tema Oscuro - Estilos Globales
+   ============================================ */
+
+body.dark-theme {
+  /* Variables ya están definidas arriba, solo estilos adicionales específicos */
+}
+
+body.dark-theme .list-group-item {
+  background-color: var(--primary-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-theme .list-group-item:hover {
+  background-color: var(--secondary-white);
+}
+
+body.dark-theme .navbar-theme-toggle {
+  border-color: var(--primary-black);
+  background: var(--primary-white);
+  color: var(--primary-black);
+}
+
+body.dark-theme .navbar-theme-toggle:hover {
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+body.dark-theme .app-footer {
+  background: var(--primary-white);
+  color: var(--primary-black);
+  border-top-color: var(--border-color);
+}
+
+body.dark-theme .footer-title,
+body.dark-theme .footer-subtitle {
+  color: var(--primary-black);
+}
+
+body.dark-theme .footer-text,
+body.dark-theme .footer-links a {
+  color: var(--text-secondary);
+}
+
+body.dark-theme .footer-links a:hover,
+body.dark-theme .footer-links a.active {
+  color: var(--priackmary-black) !important;
+}
+
+body.dark-theme .footer-copyright {
+  color: var(--text-secondary);
+}
+
+body.dark-theme .footer-bottom {
+  border-top-color: var(--border-color);
+}
+
+body.dark-theme .welcome-container {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark-theme .hero-section {
+  background: var(--tertiary-black);
+  color: #ffffff !important;
+}
+
+
+body.dark-theme .welcome-message {
+  color: #ffffff;
+}
+
+body.dark-theme .btn-primary {
+  background: var(--primary-black);
+  color: var(--primary-white);
+  border-color: var(--primary-black);
+}
+
+body.dark-theme .btn-primary:hover {
+  background: var(--secondary-black);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .btn-outline {
+  background: transparent;
+  color: var(--primary-black);
+  border-color: var(--primary-black);
+}
+
+body.dark-theme .btn-outline:hover {
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+body.dark-theme .form-calendar-weekdays,
+body.dark-theme .calendar-weekdays {
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+body.dark-theme .form-calendar {
+  background: var(--primary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .form-calendar-nav {
+  background: var(--secondary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .form-calendar-day {
+  background: var(--primary-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-theme .form-calendar-day.today {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .form-calendar-day.available:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-theme .form-calendar-day.selected {
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+body.dark-theme .calendar-wrapper {
+  background: var(--primary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .calendar-nav {
+  background: var(--secondary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .calendar-day-cell {
+  background: var(--primary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .calendar-day-cell.today {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary-black);
+}
+
+body.dark-theme .calendar-day-cell.available:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-theme .calendar-legend {
+  background: var(--secondary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .filter-select {
+  background: var(--primary-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-theme .time-slots-grid {
+  background: var(--secondary-white);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .time-slot-btn {
+  background: var(--primary-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-theme .time-slot-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary-black);
+}
+
+body.dark-theme .time-slot-btn.selected {
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+body.dark-theme .section-title {
+  color: var(--text-primary);
+}
+
+body.dark-theme .feature-card {
+  background: #2d2d2d;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+body.dark-theme .feature-card h3 {
+  color: #ffffff;
+}
+
+body.dark-theme .feature-card p {
+  color: #cccccc;
+}
+
+body.dark-theme .feature-card:hover {
+  background: var(--tertiary-white);
+  box-shadow: var(--shadow-md);
+}
+
+body.dark-theme .feature-item {
+  border-bottom-color: #444444;
+  color: #ffffff;
+}
+
+body.dark-theme .feature-check {
+  color: #ffffff;
+}
+
+body.dark-theme .action-card {
+  background: #2d2d2d;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+body.dark-theme .action-card h3 {
+  color: #ffffff;
+}
+
+body.dark-theme .action-card p {
+  color: #cccccc;
+}
+
+body.dark-theme .action-card:hover {
+  background: #444444;
+  border-color: #555555;
+  color: #ffffff;
+}
+
+body.dark-theme .action-card:hover h3 {
+  color: var(--primary-black);
+}
+
+body.dark-theme .action-card:hover p {
+  color: var(--tertiary-black);
+}
+
+body.dark-theme .about-section {
+  background: var(--tertiary-black);
+  border-top-color: var(--primary-black);
+}
+
+body.dark-theme .about-item {
+  background: #3a3a3a;
+  border-color: #555555;
+  color: #ffffff;
+}
+
+body.dark-theme .about-item h4 {
+  color: #ffffff;
+  border-bottom-color: #666666;
+}
+
+body.dark-theme .about-item p {
+  color: #cccccc;
+}
+
+body.dark-theme .about-content > p {
+  color: #cccccc;
+}
+
+/* Textos que deben ser visibles en modo oscuro */
+body.dark-theme .text-muted,
+body.dark-theme .form-text.text-muted {
+  color: var(--text-secondary) !important;
+}
+
+/* Hero title en modo claro: fondo negro, texto blanco */
+body.light-theme .hero-title {
+  color: #ffffff !important;
+}
+
+body.light-theme .hero-subtitle {
+  color: #ffffff !important;
+}
+
+body.light-theme .hero-description {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+body.dark-theme .hero-title {
+  color: #ffffff !important;
+}
+
+body.dark-theme .hero-subtitle {
+  color: #ffffff !important;
+}
+
+body.dark-theme .hero-description {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Inputs con fondo blanco y texto oscuro en modo oscuro */
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+body.dark-theme .form-control::placeholder,
+body.dark-theme .form-select::placeholder {
+  color: #6c757d !important;
+  opacity: 1;
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .form-select:focus {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 0 0.125rem rgba(255, 255, 255, 0.5) !important;
+}
+
+body.dark-theme .form-control:disabled,
+body.dark-theme .form-select:disabled {
+  background-color: var(--tertiary-white) !important;
+  color: var(--text-secondary) !important;
+  opacity: 0.7;
+}
+
+/* ============================================
+   Tema Claro - Estilos Globales (Por si necesitan override)
+   ============================================ */
+
+body.light-theme {
+  /* Variables ya están definidas arriba, solo estilos adicionales específicos */
+}
+
+body.light-theme .list-group-item {
+  background-color: var(--primary-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .list-group-item:hover {
+  background-color: var(--secondary-white);
+}
+
+
+
+
+
+

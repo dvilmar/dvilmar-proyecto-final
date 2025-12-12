@@ -1,0 +1,131 @@
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/" routerLinkActive="active">BookMyCut <img [src]="logoImage" alt="Mustache silhouette" width="60" height="auto" /></a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto" *ngIf="currentUser">
+        <!-- ADMINISTRADOR: Usuarios, Citas, Dashboard, Excepciones -->
+        <li class="nav-item" *ngIf="currentUser.rol === 'ADMINISTRADOR'">
+          <a class="nav-link" routerLink="/usuarios">Usuarios</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ADMINISTRADOR'">
+          <a class="nav-link" routerLink="/citas">Citas</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ADMINISTRADOR'">
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ADMINISTRADOR'">
+          <a class="nav-link" routerLink="/excepciones">Excepciones</a>
+        </li>
+        
+        <!-- ESTILISTA: Citas, Perfil, Disponibilidad, Servicios, Dashboard -->
+        <li class="nav-item" *ngIf="currentUser.rol === 'ESTILISTA'">
+          <a class="nav-link" routerLink="/citas">Citas</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ESTILISTA'">
+          <a class="nav-link" routerLink="/perfil">Perfil</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ESTILISTA'">
+          <a class="nav-link" routerLink="/disponibilidad">Disponibilidad</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ESTILISTA'">
+          <a class="nav-link" routerLink="/servicios">Servicios</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'ESTILISTA'">
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        </li>
+        
+        <!-- CLIENTE: Reservar Cita, Perfil, Citas, Notificaciones -->
+        <li class="nav-item" *ngIf="currentUser.rol === 'CLIENTE'">
+          <a class="nav-link" routerLink="/citas/nueva">Reservar Cita</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'CLIENTE'">
+          <a class="nav-link" routerLink="/perfil">Perfil</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'CLIENTE'">
+          <a class="nav-link" routerLink="/citas">Citas</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser.rol === 'CLIENTE'">
+          <a class="nav-link position-relative" routerLink="/notificaciones">
+            Notificaciones
+            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle" *ngIf="unreadCount > 0">
+              {{ unreadCount }}
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link">{{ currentUser.nombre }}</span>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-primary btn-sm" (click)="logout()">Cerrar Sesión</button>
+        </li>
+        <li class="nav-item">
+          <!-- Toggle de Tema -->
+          <button 
+            class="navbar-theme-toggle" 
+            (click)="toggleTheme()"
+            [attr.aria-label]="currentTheme === 'light' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'"
+            [title]="currentTheme === 'light' ? 'Modo oscuro' : 'Modo claro'"
+            type="button">
+            <svg *ngIf="currentTheme === 'light'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg *ngIf="currentTheme === 'dark'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto" *ngIf="!currentUser">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/citas/nueva">Reservar Cita</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">Acceder</a>
+        </li>
+        <li class="nav-item">
+          <!-- Toggle de Tema -->
+          <button 
+            class="navbar-theme-toggle" 
+            (click)="toggleTheme()"
+            [attr.aria-label]="currentTheme === 'light' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'"
+            [title]="currentTheme === 'light' ? 'Modo oscuro' : 'Modo claro'"
+            type="button">
+            <svg *ngIf="currentTheme === 'light'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg *ngIf="currentTheme === 'dark'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+
+

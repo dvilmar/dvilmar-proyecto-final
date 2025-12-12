@@ -1,0 +1,116 @@
+.navbar {
+  padding: 1rem 0;
+  position: relative;
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Controles del lado derecho */
+.navbar-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+/* Toggle de tema dentro del menú de navegación */
+.navbar-nav .navbar-theme-toggle {
+  margin-left: 0.5rem;
+  align-self: center;
+}
+
+/* Alinear botones de cerrar sesión y tema a la misma altura */
+.navbar-nav .nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item:has(.btn-outline-primary),
+.navbar-nav .nav-item:has(.navbar-theme-toggle) {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item .btn.btn-outline-primary.btn-sm,
+.navbar-nav .nav-item .navbar-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px; /* Misma altura para ambos botones */
+}
+
+/* Toggle de Tema en Navbar */
+.navbar-theme-toggle {
+  width: 40px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--primary-black);
+  background: var(--primary-white);
+  color: var(--primary-black);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.navbar-theme-toggle:hover {
+  background: var(--primary-black);
+  color: var(--primary-white);
+  transform: scale(1.05);
+}
+
+.navbar-theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.navbar-theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+  transition: transform 0.3s ease;
+}
+
+.navbar-theme-toggle:hover svg {
+  transform: rotate(15deg);
+}
+
+/* Los estilos de tema están ahora en styles.css global */
+
+/* Logo del navbar - invertir colores en tema oscuro */
+.navbar-brand img {
+  transition: filter 0.3s ease;
+}
+
+.navbar-brand img.dark-theme-logo {
+  filter: invert(1) brightness(1.2);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .navbar-right-controls {
+    gap: 0.5rem;
+  }
+
+  .navbar-theme-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .navbar-theme-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+
+
+
+

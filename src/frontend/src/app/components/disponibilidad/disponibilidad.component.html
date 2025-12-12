@@ -1,0 +1,139 @@
+<div class="container mt-4 mt-md-5">
+  <h2 class="mb-4 mb-md-5">Gestión de Disponibilidad</h2>
+  
+  <div class="row mt-4">
+    <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+      <div class="card">
+        <div class="card-header">
+          <h5>{{ disponibilidadEditando ? 'Editar Disponibilidad' : 'Nueva Disponibilidad' }}</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="disponibilidadForm" (ngSubmit)="crearDisponibilidad()">
+            <div class="mb-4">
+              <label class="form-label">Día de la Semana *</label>
+              <select class="form-select" formControlName="dayOfWeek" [disabled]="!!disponibilidadEditando">
+                <option value="">Seleccionar día</option>
+                <option value="MONDAY">Lunes</option>
+                <option value="TUESDAY">Martes</option>
+                <option value="WEDNESDAY">Miércoles</option>
+                <option value="THURSDAY">Jueves</option>
+                <option value="FRIDAY">Viernes</option>
+                <option value="SATURDAY">Sábado</option>
+                <option value="SUNDAY">Domingo</option>
+              </select>
+              <div class="text-danger" *ngIf="disponibilidadForm.get('dayOfWeek')?.invalid && disponibilidadForm.get('dayOfWeek')?.touched">
+                El día es obligatorio
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 mb-4">
+                <label class="form-label">Hora Inicio *</label>
+                <input type="time" class="form-control" formControlName="startTime">
+                <div class="text-danger" *ngIf="disponibilidadForm.get('startTime')?.invalid && disponibilidadForm.get('startTime')?.touched">
+                  La hora de inicio es obligatoria
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 mb-4">
+                <label class="form-label">Hora Fin *</label>
+                <input type="time" class="form-control" formControlName="endTime">
+                <div class="text-danger" *ngIf="disponibilidadForm.get('endTime')?.invalid && disponibilidadForm.get('endTime')?.touched">
+                  La hora de fin es obligatoria
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-danger" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="disponibilidadForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                {{ disponibilidadEditando ? 'Actualizar' : 'Agregar' }} Disponibilidad
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()" *ngIf="disponibilidadEditando">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5>Disponibilidades Actuales</h5>
+          <button class="btn btn-outline-primary btn-sm" (click)="togglePagination()">
+            {{ usePagination ? 'Desactivar' : 'Activar' }} Paginación
+          </button>
+        </div>
+        <div class="card-body">
+          <!-- Controles de paginación -->
+          <div *ngIf="usePagination && pageData" class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              Mostrando {{ (currentPage * pageSize) + 1 }} - 
+              {{ Math.min((currentPage + 1) * pageSize, totalElements) }} de {{ totalElements }} disponibilidades
+            </div>
+            <nav>
+              <ul class="pagination mb-0">
+                <li class="page-item" [class.disabled]="currentPage === 0">
+                  <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Anterior</a>
+                </li>
+                <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                  <a class="page-link" (click)="onPageChange(page)" style="cursor: pointer;">{{ page + 1 }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+                  <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Siguiente</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div *ngIf="loading" class="text-center">
+            <div class="spinner-border" role="status"></div>
+          </div>
+
+          <div *ngIf="!loading && ((usePagination && totalElements === 0) || (!usePagination && disponibilidades.length === 0))" class="alert alert-info">
+            No hay disponibilidades configuradas.
+          </div>
+
+          <div *ngIf="!loading && disponibilidades.length > 0">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Día</th>
+                  <th>Horario</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let disp of disponibilidades">
+                  <td>{{ getDiaNombre(disp.dayOfWeek) }}</td>
+                  <td>{{ disp.startTime }} - {{ disp.endTime }}</td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                      <button class="btn btn-outline-primary" (click)="editarDisponibilidad(disp)">
+                        Editar
+                      </button>
+                      <button class="btn btn-outline-danger" (click)="eliminarDisponibilidad(disp.availabilityId)">
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

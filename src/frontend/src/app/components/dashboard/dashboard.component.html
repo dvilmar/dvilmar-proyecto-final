@@ -1,0 +1,139 @@
+<div class="dashboard">
+  <div class="container mt-4 mt-md-5">
+    <h1 class="mb-4 mb-md-5">Dashboard</h1>
+    
+    <div class="row mb-4 mb-md-5" *ngIf="currentUser">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Información del Usuario</h5>
+            <p class="mb-2"><strong>Nombre:</strong> {{ currentUser.nombre }}</p>
+            <p class="mb-2"><strong>Email:</strong> {{ currentUser.email }}</p>
+            <p class="mb-2"><strong>Rol:</strong>&nbsp;<span class="badge bg-primary">{{ currentUser.rol }}</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4 mb-md-5" *ngIf="currentUser">
+      <div class="col-12">
+        <div class="d-flex flex-column flex-md-row gap-2" role="group">
+          <a routerLink="/citas" class="btn btn-outline-primary">Ver Todas las Citas</a>
+          <a routerLink="/citas/nueva" class="btn btn-primary" *ngIf="currentUser.rol === 'CLIENTE' || currentUser.rol === 'ADMINISTRADOR'">
+            Nueva Cita
+          </a>
+          <a routerLink="/disponibilidad" class="btn btn-outline-secondary" *ngIf="currentUser.rol === 'ESTILISTA'">
+            Gestionar Disponibilidad
+          </a>
+          <a routerLink="/servicios" class="btn btn-outline-secondary" *ngIf="currentUser.rol === 'ESTILISTA'">
+            Gestionar Servicios
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="currentUser?.rol === 'CLIENTE'">
+      <div class="col-12">
+        <h3 class="mb-3">Mis Citas Recientes</h3>
+        <div class="card">
+          <div class="card-body">
+            <div *ngIf="loading" class="text-center">
+              <p>Cargando citas...</p>
+            </div>
+            <div *ngIf="!loading && citas.length === 0" class="text-center">
+              <p>No tienes citas programadas</p>
+            </div>
+            <div *ngIf="!loading && citas.length > 0">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Estilista</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cita of citas.slice(0, 5)">
+                    <td>{{ formatDate(cita.date) }}</td>
+                    <td>{{ cita.startTime }} - {{ cita.endTime }}</td>
+                    <td>{{ cita.stylistName || 'N/A' }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'bg-success': cita.status === 'CONFIRMADA',
+                        'bg-danger': cita.status === 'CANCELADA',
+                        'bg-secondary': cita.status === 'FINALIZADA'
+                      }">
+                        {{ cita.status }}
+                      </span>
+                    </td>
+                    <td>{{ cita.totalPrice }}€</td>
+                    <td>
+                      <a routerLink="/citas" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="currentUser?.rol === 'ESTILISTA'">
+      <div class="col-12">
+        <h3 class="mb-3">Mis Citas Asignadas</h3>
+        <div class="card">
+          <div class="card-body">
+            <div *ngIf="loading" class="text-center">
+              <p>Cargando citas...</p>
+            </div>
+            <div *ngIf="!loading && citas.length === 0" class="text-center">
+              <p>No tienes citas asignadas</p>
+            </div>
+            <div *ngIf="!loading && citas.length > 0">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cita of citas.slice(0, 5)">
+                    <td>{{ formatDate(cita.date) }}</td>
+                    <td>{{ cita.startTime }} - {{ cita.endTime }}</td>
+                    <td>{{ cita.clientName || 'N/A' }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'bg-success': cita.status === 'CONFIRMADA',
+                        'bg-danger': cita.status === 'CANCELADA',
+                        'bg-secondary': cita.status === 'FINALIZADA'
+                      }">
+                        {{ cita.status }}
+                      </span>
+                    </td>
+                    <td>{{ cita.totalPrice }}€</td>
+                    <td>
+                      <a routerLink="/citas" class="btn btn-sm btn-outline-primary">Ver Citas</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
