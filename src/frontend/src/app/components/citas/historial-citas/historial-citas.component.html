@@ -1,0 +1,149 @@
+<div class="container mt-4 mt-md-5">
+  <div class="d-flex justify-content-between align-items-center mb-4 mb-md-5">
+    <h2>Mi Historial de Citas</h2>
+    <button class="btn btn-outline-primary" (click)="router.navigate(['/citas'])">
+      Ver Citas Actuales
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Filtros</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-3">
+          <label class="form-label">Fecha Desde</label>
+          <input type="date" class="form-control" [(ngModel)]="filtroFechaDesde" (change)="aplicarFiltros()">
+        </div>
+        <div class="col-12 col-md-3">
+          <label class="form-label">Fecha Hasta</label>
+          <input type="date" class="form-control" [(ngModel)]="filtroFechaHasta" (change)="aplicarFiltros()">
+        </div>
+        <div class="col-12 col-md-3">
+          <label class="form-label">Estilista</label>
+          <select class="form-select" [(ngModel)]="filtroEstilistaId" (change)="aplicarFiltros()">
+            <option value="">Todos</option>
+            <option *ngFor="let estilista of estilistas" [value]="estilista.usuarioId">
+              {{ estilista.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label class="form-label">Estado</label>
+          <select class="form-select" [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+            <option value="">Todos</option>
+            <option value="FINALIZADA">Finalizada</option>
+            <option value="CANCELADA">Cancelada</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Controles de paginación -->
+  <div *ngIf="usePagination && pageData" class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      Mostrando {{ (currentPage * pageSize) + 1 }} - 
+      {{ Math.min((currentPage + 1) * pageSize, totalElements) }} de {{ totalElements }} citas
+    </div>
+    <nav>
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 0">
+          <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Anterior</a>
+        </li>
+        <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+          <a class="page-link" (click)="onPageChange(page)" style="cursor: pointer;">{{ page + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+          <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+    <button class="btn btn-outline-primary btn-sm" (click)="togglePagination()">
+      {{ usePagination ? 'Desactivar' : 'Activar' }} Paginación
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- Sin citas -->
+  <div *ngIf="!loading && citasPasadas.length === 0" class="alert alert-info">
+    No tienes citas en tu historial.
+  </div>
+
+  <!-- Lista de citas -->
+  <div *ngIf="!loading && citasPasadas.length > 0" class="row">
+    <div class="col-12">
+      <div class="list-group">
+        <div *ngFor="let cita of citasPasadas" class="list-group-item">
+          <div class="d-flex w-100 justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">{{ formatDate(cita.date) }}</h5>
+                <span [ngClass]="getEstadoBadgeClass(cita.status)">
+                  {{ getEstadoTexto(cita.status) }}
+                </span>
+              </div>
+              <p class="mb-1">
+                <strong>Estilista:</strong> {{ getEstilistaNombre(cita.stylistId) }}
+              </p>
+              <p class="mb-1">
+                <strong>Horario:</strong> {{ formatTime(cita.startTime) }} - {{ formatTime(cita.endTime) }}
+              </p>
+              <p class="mb-1" *ngIf="cita.services && cita.services.length > 0">
+                <strong>Servicios:</strong> 
+                <span *ngFor="let servicio of cita.services; let last = last">
+                  {{ servicio.name }}<span *ngIf="!last">, </span>
+                </span>
+              </p>
+              <p class="mb-0">
+                <strong>Precio Total:</strong> {{ cita.totalPrice | number:'1.2-2' }} €
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div *ngIf="!loading && citasPasadas.length > 0" class="card mt-4">
+    <div class="card-body">
+      <h5>Resumen{{ (filtroFechaDesde || filtroFechaHasta || filtroEstilistaId || filtroEstado) ? ' (Filtrado)' : '' }}</h5>
+      <p><strong>Total de citas:</strong> {{ getTotalCitasFiltradas() }} 
+        <span *ngIf="filtroFechaDesde || filtroFechaHasta || filtroEstilistaId || filtroEstado" class="text-muted">
+          ({{ getTotalCitas() }} en total)
+        </span>
+      </p>
+      <p><strong>Citas finalizadas:</strong> {{ getCitasFinalizadasFiltradas() }}</p>
+      <p><strong>Citas canceladas:</strong> {{ getCitasCanceladasFiltradas() }}</p>
+      <p><strong>Total gastado:</strong> 
+        {{ getTotalGastadoFiltrado() | number:'1.2-2' }} €
+        <span *ngIf="filtroFechaDesde || filtroFechaHasta || filtroEstilistaId || filtroEstado" class="text-muted">
+          ({{ getTotalGastado() | number:'1.2-2' }} € en total)
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+

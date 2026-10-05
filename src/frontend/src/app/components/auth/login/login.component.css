@@ -1,0 +1,22 @@
+/* Login Component Styles */
+
+.invalid-feedback {
+  color: #dc3545 !important;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.is-invalid {
+  border-color: #000000 !important;
+}
+
+.is-invalid:focus {
+  border-color: #000000 !important;
+  box-shadow: 0 0 0 0.125rem rgba(0, 0, 0, 0.25) !important;
+}
+
+
+
+

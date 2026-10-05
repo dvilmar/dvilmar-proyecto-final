@@ -1,0 +1,276 @@
+/* Calendar Styles for Appointment Form */
+
+.form-calendar {
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--primary-white);
+  max-width: 600px;
+}
+
+.form-calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--secondary-white);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.calendar-nav-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--primary-black);
+  background: var(--primary-white);
+  color: var(--primary-black);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--primary-black);
+  color: var(--primary-white);
+  transform: scale(1.05);
+}
+
+.calendar-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.calendar-month-display {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.calendar-month-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.form-calendar-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+.form-weekday {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-weekday:last-child {
+  border-right: none;
+}
+
+.form-calendar-days {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-calendar-week:last-child {
+  border-bottom: none;
+}
+
+.form-calendar-day {
+  min-height: 50px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--border-color);
+  background: var(--primary-white);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: default;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.form-calendar-week .form-calendar-day:last-child {
+  border-right: none;
+}
+
+.form-calendar-day.other-month {
+  background: var(--secondary-white);
+  opacity: 0.4;
+  color: var(--text-muted);
+}
+
+.form-calendar-day.today {
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.form-calendar-day.today::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--primary-black);
+  border-radius: 50%;
+}
+
+.form-calendar-day.available {
+  cursor: pointer;
+}
+
+.form-calendar-day.available:hover {
+  background: rgba(0, 0, 0, 0.08);
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+.form-calendar-day.available:active {
+  transform: scale(0.98);
+}
+
+.form-calendar-day.selected {
+  background: var(--primary-black);
+  color: var(--primary-white);
+  font-weight: 700;
+}
+
+.form-calendar-day.selected::after {
+  display: none;
+}
+
+.form-calendar-day.not-available {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--secondary-white),
+    var(--secondary-white) 3px,
+    var(--tertiary-white) 3px,
+    var(--tertiary-white) 6px
+  );
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-calendar-day.no-click {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-calendar-day {
+    min-height: 40px;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .form-weekday {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.7rem;
+  }
+
+  .calendar-nav-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .calendar-month-display {
+    font-size: 1rem;
+  }
+}
+
+/* Los estilos de tema están ahora en styles.css global */
+
+/* Selector de Horas Disponibles */
+.time-slots-container {
+  margin-top: 1rem;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--secondary-white);
+}
+
+.time-slot-btn {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-color);
+  background: var(--primary-white);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.time-slot-btn:hover {
+  border-color: var(--primary-black);
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.time-slot-btn.selected {
+  background: var(--primary-black);
+  color: var(--primary-white);
+  border-color: var(--primary-black);
+  font-weight: 600;
+}
+
+.time-slot-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .time-slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .time-slot-btn {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Los estilos de tema están ahora en styles.css global */
+
+
+

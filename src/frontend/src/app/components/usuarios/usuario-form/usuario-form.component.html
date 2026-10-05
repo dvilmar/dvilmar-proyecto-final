@@ -1,0 +1,83 @@
+﻿<div class="container mt-4 mt-md-5">
+  <h2 class="mb-4 mb-md-5">{{ isEditMode ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+
+  <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 col-md-6 mb-4">
+            <label class="form-label">Nombre *</label>
+            <input type="text" class="form-control" formControlName="nombre">
+            <div class="text-danger" *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+              El nombre es obligatorio
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 mb-4">
+            <label class="form-label">Email *</label>
+            <input type="email" class="form-control" formControlName="email" [readonly]="isEditMode">
+            <div class="text-danger" *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
+              El email es obligatorio y debe ser válido
+            </div>
+            <small class="form-text text-muted" *ngIf="isEditMode">El email no se puede modificar</small>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-md-6 mb-4">
+            <label class="form-label">Rol *</label>
+            <select class="form-select" formControlName="rol" [disabled]="isEditMode">
+              <option value="">Seleccionar rol</option>
+              <option value="CLIENTE">Cliente</option>
+              <option value="ESTILISTA">Estilista</option>
+              <option value="ADMINISTRADOR">Administrador</option>
+            </select>
+            <div class="text-danger" *ngIf="usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched">
+              El rol es obligatorio
+            </div>
+            <small class="form-text text-muted" *ngIf="isEditMode">El rol no se puede modificar</small>
+          </div>
+
+          <div class="col-12 col-md-6 mb-4" *ngIf="usuarioForm.get('rol')?.value === 'CLIENTE'">
+            <label class="form-label">Teléfono</label>
+            <input type="text" class="form-control" formControlName="telefono">
+          </div>
+        </div>
+
+        <div class="mb-4" *ngIf="!isEditMode">
+          <label class="form-label">Contraseña *</label>
+          <input type="password" class="form-control" formControlName="contraseña">
+          <div class="text-danger" *ngIf="usuarioForm.get('contraseña')?.invalid && usuarioForm.get('contraseña')?.touched">
+            La contraseña es obligatoria (mínimo 6 caracteres)
+          </div>
+        </div>
+
+        <div class="mb-4" *ngIf="isEditMode">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="activo" formControlName="activo">
+            <label class="form-check-label" for="activo">
+              Usuario activo
+            </label>
+          </div>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="usuarioForm.invalid || loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+            {{ isEditMode ? 'Actualizar' : 'Crear' }} Usuario
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+
+

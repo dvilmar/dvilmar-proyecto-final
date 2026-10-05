@@ -1,0 +1,104 @@
+<div class="welcome-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">BookMyCut</h1>
+        <p class="hero-subtitle">Sistema de gestión de reservas para peluquerías y centros de belleza</p>
+        <p class="hero-description">
+          Reserva tus citas fácilmente. Los clientes pueden reservar sin necesidad de cuenta. 
+          Estilistas y administradores pueden gestionar sus negocios.
+        </p>
+
+        <!-- Acciones para usuarios no autenticados -->
+        <div *ngIf="!isAuthenticated" class="hero-actions">
+          <a routerLink="/citas/nueva" class="btn btn-primary">Reservar Cita</a>
+          <a routerLink="/login" class="btn btn-outline">Acceder</a>
+        </div>
+
+        <!-- Bienvenida para usuarios autenticados -->
+        <div *ngIf="isAuthenticated && currentUser" class="hero-welcome">
+          <p class="welcome-message text-white">
+            Bienvenid&#64;, <strong>{{ currentUser.nombre }}</strong>
+          </p>
+          <button (click)="navigateToDashboard()" class="btn btn-primary">
+            Ir a mi Panel
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" *ngIf="!isAuthenticated">
+    <div class="container">
+      <h2 class="section-title">¿Qué puedes hacer con BookMyCut?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Reservar citas</h3>
+          <p>Agenda tus citas de forma rápida y sencilla con tu estilista favorito.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👤</div>
+          <h3>Historial de citas</h3>
+          <p>Revisa todas tus citas programadas de manera sencilla y cómoda.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔔</div>
+          <h3>Notificaciones</h3>
+          <p>Recibe notificaciones automáticas sobre tus próximas citas.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Multiplataforma</h3>
+          <p>Accede desde cualquier dispositivo, estés donde estés.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Role-specific features for authenticated users -->
+  <section class="features-section" *ngIf="isAuthenticated && currentUser">
+    <div class="container">
+      <h2 class="section-title">Funcionalidades Disponibles</h2>
+      <div class="features-list">
+        <div class="feature-item" *ngFor="let feature of getRoleSpecificFeatures()">
+          <span class="feature-check">✓</span>
+          <span>{{ feature }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="container">
+      <h2 class="section-title">Sobre BookMyCut</h2>
+      <div class="about-content">
+        <p>
+          BookMyCut es una plataforma diseñada para simplificar la gestión de reservas en peluquerías 
+          y centros de belleza. El sistema está pensado para ser sencillo, fácil de usar y práctico.
+        </p>
+        <div class="about-grid">
+          <div class="about-item">
+            <h4>Para clientes</h4>
+            <p>Reserva citas sin necesidad de crear cuenta. Solo necesitas proporcionar tu nombre, email y teléfono al reservar.</p>
+          </div>
+          <div class="about-item">
+            <h4>Para estilistas</h4>
+            <p>Especifica los servicios que ofreces y consulta las citas programadas en tu calendario.</p>
+          </div>
+          <div class="about-item">
+            <h4>Para dueños</h4>
+            <p>Gestiona usuarios, citas, estilistas y fechas disponibles del establecimiento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+

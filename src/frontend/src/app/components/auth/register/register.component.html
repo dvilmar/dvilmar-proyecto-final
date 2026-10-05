@@ -1,0 +1,94 @@
+<div class="container mt-4 mt-md-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-7 col-xl-6">
+      <div class="card">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="card-title text-center mb-4 mb-md-5">Registrarse</h2>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+              <label for="name" class="form-label">Nombre</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="name"
+                formControlName="name"
+                [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+              <div class="invalid-feedback" *ngIf="registerForm.get('name')?.hasError('required')">
+                El nombre es obligatorio
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email"
+                formControlName="email"
+                [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.hasError('required')">
+                El email es obligatorio
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.hasError('email')">
+                El email no es válido
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="password" class="form-label">Contraseña</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password"
+                formControlName="password"
+                autocomplete="new-password"
+                [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('required')">
+                La contraseña es obligatoria
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('minlength')">
+                La contraseña debe tener al menos 6 caracteres
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="role" class="form-label">Rol</label>
+              <select 
+                class="form-select" 
+                id="role"
+                formControlName="role"
+                [class.is-invalid]="registerForm.get('role')?.invalid && registerForm.get('role')?.touched">
+                <option value="">Selecciona un rol</option>
+                <option value="CLIENTE">Cliente</option>
+                <option value="ESTILISTA">Estilista</option>
+                <option value="ADMINISTRADOR">Administrador</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="registerForm.get('role')?.hasError('required')">
+                El rol es obligatorio
+              </div>
+            </div>
+            <div class="mb-4" *ngIf="registerForm.get('role')?.value === 'CLIENTE'">
+              <label for="phone" class="form-label">Teléfono</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="phone"
+                formControlName="phone">
+            </div>
+            <div class="alert alert-danger" *ngIf="error">
+              {{ error }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid || loading">
+              <span *ngIf="!loading">Registrarse</span>
+              <span *ngIf="loading">Cargando...</span>
+            </button>
+          </form>
+          <div class="text-center mt-4 pt-4" style="border-top: 1px solid var(--border-color);">
+            <p class="mb-0">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

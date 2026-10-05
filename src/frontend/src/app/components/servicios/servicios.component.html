@@ -1,0 +1,221 @@
+<div class="container mt-4 mt-md-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 mb-md-5 gap-3">
+    <h2>Gestión de Servicios</h2>
+    <button 
+      class="btn btn-primary" 
+      (click)="mostrarFormulario = true; servicioForm.reset(); servicioEditando = null"
+      *ngIf="canManage">
+      <i class="bi bi-plus-circle"></i> Nuevo Servicio
+    </button>
+  </div>
+
+  <div class="card mb-4" *ngIf="mostrarFormulario && canManage">
+    <div class="card-header">
+      <h5>{{ servicioEditando ? 'Editar Servicio' : 'Nuevo Servicio' }}</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="servicioForm" (ngSubmit)="guardarServicio()">
+        <div class="row">
+          <div class="col-12 col-md-6 mb-4">
+            <label class="form-label">Nombre *</label>
+            <input type="text" class="form-control" formControlName="name">
+            <div class="text-danger" *ngIf="servicioForm.get('name')?.invalid && servicioForm.get('name')?.touched">
+              El nombre es obligatorio
+            </div>
+          </div>
+
+          <div class="col-12 col-md-3 mb-4">
+            <label class="form-label">Duración (min) *</label>
+            <input type="number" class="form-control" formControlName="duration" min="1">
+            <div class="text-danger" *ngIf="servicioForm.get('duration')?.invalid && servicioForm.get('duration')?.touched">
+              La duración es obligatoria
+            </div>
+          </div>
+
+          <div class="col-12 col-md-3 mb-4">
+            <label class="form-label">Precio (€) *</label>
+            <input type="number" step="0.01" class="form-control" formControlName="unitPrice" min="0">
+            <div class="text-danger" *ngIf="servicioForm.get('unitPrice')?.invalid && servicioForm.get('unitPrice')?.touched">
+              El precio es obligatorio
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-control" formControlName="description" rows="3"></textarea>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarFormulario()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="servicioForm.invalid || loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+            {{ servicioEditando ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sección de Mis Servicios (solo para estilistas) -->
+  <div class="card mb-4" *ngIf="currentUser?.rol === 'ESTILISTA'">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Mis Servicios</h5>
+      <button class="btn btn-outline-primary btn-sm" (click)="abrirAsociacion()">
+        Gestionar Mis Servicios
+      </button>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loadingMisServicios" class="text-center">
+        <div class="spinner-border spinner-border-sm" role="status"></div>
+      </div>
+      <div *ngIf="!loadingMisServicios && misServicios.length === 0" class="alert alert-info mb-0">
+        No tienes servicios asociados. Haz clic en "Gestionar Mis Servicios" para asociar servicios.
+      </div>
+      <div *ngIf="!loadingMisServicios && misServicios.length > 0" class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Duración</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let servicio of misServicios">
+              <td>{{ servicio.name }}</td>
+              <td>{{ servicio.description || '-' }}</td>
+              <td>{{ servicio.duration }} min</td>
+              <td>{{ servicio.unitPrice }}€</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal/Formulario de Asociación de Servicios -->
+  <div class="modal fade" [class.show]="mostrarAsociacion" [style.display]="mostrarAsociacion ? 'block' : 'none'" tabindex="-1" *ngIf="mostrarAsociacion">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Gestionar Mis Servicios</h5>
+          <button type="button" class="btn-close" (click)="cancelarAsociacion()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">Selecciona los servicios que ofreces:</p>
+          <div class="list-group">
+            <label class="list-group-item" *ngFor="let servicio of serviciosDisponibles">
+              <input 
+                class="form-check-input me-2" 
+                type="checkbox" 
+                [checked]="isServicioSeleccionado(servicio.serviceId)"
+                (change)="toggleServicio(servicio.serviceId)">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <strong>{{ servicio.name }}</strong>
+                  <p class="mb-0 text-muted small">{{ servicio.description || 'Sin descripción' }}</p>
+                </div>
+                <div class="text-end">
+                  <div>{{ servicio.duration }} min</div>
+                  <div><strong>{{ servicio.unitPrice }}€</strong></div>
+                </div>
+              </div>
+            </label>
+          </div>
+          <div class="alert alert-danger mt-3" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelarAsociacion()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="guardarAsociacion()" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade" *ngIf="mostrarAsociacion" (click)="cancelarAsociacion()"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">{{ currentUser?.rol === 'ESTILISTA' ? 'Todos los Servicios Disponibles' : 'Servicios' }}</h5>
+    </div>
+    <div class="card-body">
+      <!-- Controles de paginación -->
+      <div *ngIf="usePagination && pageData" class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          Mostrando {{ (currentPage * pageSize) + 1 }} - 
+          {{ Math.min((currentPage + 1) * pageSize, totalElements) }} de {{ totalElements }} servicios
+        </div>
+        <nav>
+          <ul class="pagination mb-0">
+            <li class="page-item" [class.disabled]="currentPage === 0">
+              <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Anterior</a>
+            </li>
+            <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+              <a class="page-link" (click)="onPageChange(page)" style="cursor: pointer;">{{ page + 1 }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+              <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border" role="status"></div>
+      </div>
+
+      <div *ngIf="!loading && ((usePagination && totalElements === 0) || (!usePagination && servicios.length === 0))" class="alert alert-info">
+        No hay servicios registrados.
+      </div>
+
+      <div *ngIf="!loading && servicios.length > 0">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Duración</th>
+              <th>Precio</th>
+              <th *ngIf="canManage">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let servicio of servicios">
+              <td>{{ servicio.name }}</td>
+              <td>{{ servicio.description || '-' }}</td>
+              <td>{{ servicio.duration }} min</td>
+              <td>{{ servicio.unitPrice }}€</td>
+              <td *ngIf="canManage">
+                <button 
+                  class="btn btn-sm btn-outline-primary me-1" 
+                  (click)="editarServicio(servicio)">
+                  Editar
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  (click)="eliminarServicio(servicio.serviceId)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

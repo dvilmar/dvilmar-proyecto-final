@@ -1,0 +1,254 @@
+<div class="container mt-4 mt-md-5">
+  <h2 class="mb-4 mb-md-5">{{ isEditMode ? 'Editar Cita' : (currentUser ? 'Nueva Cita' : 'Reservar Cita') }}</h2>
+  
+  <div class="alert alert-info" *ngIf="!currentUser">
+    <strong>Reserva con cuenta:</strong> Completa tus datos y contraseña para crear la reserva. 
+    Se creará automáticamente una cuenta de cliente y podrás acceder con tu email y contraseña.
+  </div>
+
+  <form [formGroup]="citaForm" (ngSubmit)="onSubmit()" class="mt-4">
+    <!-- Selector de Estilista (debe ir primero) -->
+    <div class="row mb-4">
+      <div class="col-12 col-md-6 mb-4">
+        <label class="form-label">Estilista</label>
+        <select class="form-select" formControlName="stylistId">
+          <option value="">Seleccionar estilista</option>
+          <option *ngFor="let estilista of estilistas" [value]="estilista.usuarioId">
+            {{ estilista.nombre }}
+          </option>
+        </select>
+        <div class="text-danger" *ngIf="citaForm.get('stylistId')?.invalid && citaForm.get('stylistId')?.touched">
+          El estilista es obligatorio
+        </div>
+        <small class="form-text text-muted" *ngIf="!citaForm.get('stylistId')?.value">
+          Primero selecciona un estilista para ver las fechas disponibles
+        </small>
+      </div>
+    </div>
+
+    <!-- Calendario para seleccionar fecha (solo se muestra si hay estilista seleccionado) -->
+    <div class="row mb-4" *ngIf="citaForm.get('stylistId')?.value">
+      <div class="col-12">
+        <label class="form-label mb-3">Selecciona una fecha</label>
+        <div class="form-calendar">
+          <!-- Navegación del calendario -->
+          <div class="form-calendar-nav">
+            <button type="button" class="calendar-nav-btn" (click)="mesAnterior()" aria-label="Mes anterior">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            
+            <div class="calendar-month-display">
+              <strong>{{ nombreMes }} {{ anio }}</strong>
+              <input 
+                type="month" 
+                class="calendar-month-input" 
+                [value]="getCurrentMonthValue()" 
+                (change)="cambiarMesDesdeInput($event)"
+                aria-label="Seleccionar mes">
+            </div>
+            
+            <button type="button" class="calendar-nav-btn" (click)="mesSiguiente()" aria-label="Mes siguiente">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Grid del calendario -->
+          <div class="form-calendar-grid">
+            <!-- Días de la semana -->
+            <div class="form-calendar-weekdays">
+              <div class="form-weekday" *ngFor="let dia of diasSemana">{{ dia }}</div>
+            </div>
+
+            <!-- Días del mes -->
+            <div class="form-calendar-days">
+              <div 
+                *ngFor="let semana of semanas" 
+                class="form-calendar-week">
+                <div 
+                  *ngFor="let dia of semana" 
+                  class="form-calendar-day"
+                  [class.other-month]="dia === null"
+                  [class.today]="esHoy(dia)"
+                  [class.not-available]="dia && !estaDisponible(dia)"
+                  [class.available]="dia && estaDisponible(dia)"
+                  [class.selected]="isFechaSeleccionada(dia)"
+                  [class.no-click]="dia && (!estaDisponible(dia) || diaSinHoras(dia))"
+                  (click)="dia && estaDisponible(dia) && !diaSinHoras(dia) ? seleccionarFecha(dia) : null"
+                  [title]="dia ? (estaDisponible(dia) ? (diaSinHoras(dia) ? 'No hay horas disponibles este día' : 'Seleccionar esta fecha') : 'Fecha no disponible') : ''">
+                  {{ dia ? dia.getDate() : '' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input oculto para el formulario -->
+          <input type="date" class="d-none" formControlName="date" [min]="minDate">
+          <div class="text-danger mt-2" *ngIf="citaForm.get('date')?.invalid && citaForm.get('date')?.touched">
+            La fecha es obligatoria
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selector de Horas Disponibles -->
+    <div class="row mb-4" *ngIf="fechaSeleccionada && citaForm.get('stylistId')?.value">
+      <div class="col-12">
+        <label class="form-label">Selecciona una hora</label>
+        <div *ngIf="cargandoHoras" class="text-center py-3">
+          <p>Cargando horas disponibles...</p>
+        </div>
+        <div *ngIf="!cargandoHoras && fechaSeleccionada && horasDisponibles.length === 0" class="alert alert-warning">
+          No hay horas disponibles para esta fecha. Por favor, selecciona otra fecha.
+        </div>
+        <div *ngIf="!cargandoHoras && horasDisponibles.length > 0" class="time-slots-container">
+          <div class="time-slots-grid">
+            <button 
+              *ngFor="let hora of horasDisponibles" 
+              type="button"
+              class="time-slot-btn"
+              [class.selected]="getHoraSeleccionada() === hora"
+              (click)="seleccionarHora(hora)">
+              {{ hora }}
+            </button>
+          </div>
+        </div>
+        <!-- Inputs ocultos para el formulario -->
+        <input type="time" class="d-none" formControlName="startTime">
+        <input type="time" class="d-none" formControlName="endTime">
+        <div class="text-danger mt-2" *ngIf="citaForm.get('startTime')?.invalid && citaForm.get('startTime')?.touched">
+          La hora de inicio es obligatoria
+        </div>
+        <div class="text-danger mt-2" *ngIf="citaForm.get('endTime')?.invalid && citaForm.get('endTime')?.touched">
+          La hora de fin es obligatoria
+        </div>
+      </div>
+    </div>
+
+    <!-- Horas (mostrar solo en modo edición o si no se usa el selector de horas) -->
+    <div class="row" *ngIf="isEditMode">
+      <div class="col-12 col-md-3 mb-4">
+        <label class="form-label">Hora Inicio</label>
+        <input type="time" class="form-control" formControlName="startTime">
+        <div class="text-danger" *ngIf="citaForm.get('startTime')?.invalid && citaForm.get('startTime')?.touched">
+          La hora de inicio es obligatoria
+        </div>
+      </div>
+
+      <div class="col-12 col-md-3 mb-4">
+        <label class="form-label">Hora Fin</label>
+        <input type="time" class="form-control" formControlName="endTime">
+        <div class="text-danger" *ngIf="citaForm.get('endTime')?.invalid && citaForm.get('endTime')?.touched">
+          La hora de fin es obligatoria
+        </div>
+      </div>
+    </div>
+
+    <!-- Campos de cliente para usuarios no autenticados -->
+    <div class="row" *ngIf="!currentUser">
+      <div class="col-12 col-md-6 mb-4">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" formControlName="clientName" placeholder="Tu nombre completo">
+        <div class="text-danger" *ngIf="citaForm.get('clientName')?.invalid && citaForm.get('clientName')?.touched">
+          El nombre es obligatorio
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 mb-4">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="clientEmail" placeholder="tu@email.com">
+        <div class="text-danger" *ngIf="citaForm.get('clientEmail')?.invalid && citaForm.get('clientEmail')?.touched">
+          <span *ngIf="citaForm.get('clientEmail')?.errors?.['required']">El email es obligatorio</span>
+          <span *ngIf="citaForm.get('clientEmail')?.errors?.['email']">El email debe tener un formato válido</span>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 mb-4" *ngIf="!currentUser">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" formControlName="clientPassword" placeholder="Mínimo 6 caracteres">
+        <small class="form-text text-muted">
+          Se creará una cuenta con este email y contraseña para que puedas acceder después
+        </small>
+        <div class="text-danger" *ngIf="citaForm.get('clientPassword')?.invalid && citaForm.get('clientPassword')?.touched">
+          <span *ngIf="citaForm.get('clientPassword')?.errors?.['required']">La contraseña es obligatoria</span>
+          <span *ngIf="citaForm.get('clientPassword')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selector de cliente para administradores -->
+    <div class="row" *ngIf="currentUser?.rol === 'ADMINISTRADOR'">
+      <div class="col-12 col-md-6 mb-4">
+        <label class="form-label">Cliente</label>
+        <select class="form-select" formControlName="clientId">
+          <option value="">Seleccionar cliente</option>
+          <option *ngFor="let cliente of clientes" [value]="cliente.usuarioId">
+            {{ cliente.nombre }} ({{ cliente.email }})
+          </option>
+        </select>
+        <div class="text-danger" *ngIf="citaForm.get('clientId')?.invalid && citaForm.get('clientId')?.touched">
+          El cliente es obligatorio
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label">Servicios</label>
+      <div *ngFor="let servicio of servicios" class="form-check">
+        <input 
+          class="form-check-input" 
+          type="checkbox" 
+          [value]="servicio.serviceId"
+          (change)="toggleServicio(servicio.serviceId, $event)"
+          [checked]="isServicioSeleccionado(servicio.serviceId)">
+        <label class="form-check-label">
+          {{ servicio.name }} - {{ servicio.unitPrice }}€ ({{ servicio.duration }} min)
+        </label>
+      </div>
+      <small class="form-text text-muted">
+        Precio total calculado: {{ precioTotal }}€
+      </small>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label">Teléfono <span *ngIf="!currentUser">*</span><span *ngIf="currentUser">(opcional)</span></label>
+      <input type="text" class="form-control" formControlName="clientPhone" placeholder="612345678">
+      <div class="text-danger" *ngIf="citaForm.get('clientPhone')?.invalid && citaForm.get('clientPhone')?.touched && !currentUser">
+        <span *ngIf="citaForm.get('clientPhone')?.errors?.['required']">El teléfono es obligatorio</span>
+        <span *ngIf="citaForm.get('clientPhone')?.errors?.['invalidPhone']">El teléfono debe tener un formato válido (9 dígitos, opcional prefijo +34 o 0034)</span>
+      </div>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+      <button type="button" class="btn btn-outline-secondary" (click)="cancelar()">Cancelar</button>
+      <div class="d-flex flex-column flex-md-row gap-2">
+        <button 
+          type="button" 
+          class="btn btn-outline-danger" 
+          (click)="cancelarCita()"
+          *ngIf="isEditMode && citaId && canCancelar()"
+          [disabled]="loading">
+          Cancelar Cita
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="citaForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+          {{ isEditMode ? 'Actualizar' : 'Crear' }} Cita
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+

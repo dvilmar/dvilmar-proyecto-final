@@ -1,0 +1,137 @@
+﻿<div class="container mt-4 mt-md-5">
+  <h2 class="mb-4 mb-md-5">Gestión de Excepciones de Horario</h2>
+
+  <div class="row mt-4">
+    <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+      <div class="card">
+        <div class="card-header">
+          <h5>Nueva Excepción</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="excepcionForm" (ngSubmit)="crearExcepcion()">
+            <div class="mb-4">
+              <label class="form-label">Fecha *</label>
+              <input type="date" class="form-control" formControlName="date" [min]="minDate">
+              <div class="text-danger" *ngIf="excepcionForm.get('date')?.invalid && excepcionForm.get('date')?.touched">
+                La fecha es obligatoria
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Estilista (opcional)</label>
+              <select class="form-select" formControlName="stylistId">
+                <option value="">Todos los estilistas</option>
+                <option *ngFor="let estilista of estilistas" [value]="estilista.usuarioId">
+                  {{ estilista.nombre }}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Tipo *</label>
+              <select class="form-select" formControlName="type">
+                <option value="">Seleccionar tipo</option>
+                <option value="DISPONIBLE">Disponible</option>
+                <option value="NO_DISPONIBLE">No Disponible</option>
+              </select>
+              <div class="text-danger" *ngIf="excepcionForm.get('type')?.invalid && excepcionForm.get('type')?.touched">
+                El tipo es obligatorio
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="todoElDia" (change)="toggleTodoElDia($event)">
+                <label class="form-check-label" for="todoElDia">
+                  Todo el día
+                </label>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="!todoElDia">
+              <div class="col-12 col-md-6 mb-4">
+                <label class="form-label">Hora Inicio</label>
+                <input type="time" class="form-control" formControlName="startTime">
+              </div>
+
+              <div class="col-12 col-md-6 mb-4">
+                <label class="form-label">Hora Fin</label>
+                <input type="time" class="form-control" formControlName="endTime">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Razón</label>
+              <input type="text" class="form-control" formControlName="reason" placeholder="Ej: Día festivo, Vacaciones">
+            </div>
+
+            <div class="alert alert-danger" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="excepcionForm.invalid || loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+              Crear Excepción
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-header">
+          <h5>Excepciones Registradas</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center">
+            <div class="spinner-border" role="status"></div>
+          </div>
+
+          <div *ngIf="!loading && excepciones.length === 0" class="alert alert-info">
+            No hay excepciones registradas.
+          </div>
+
+          <div *ngIf="!loading && excepciones.length > 0">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Estilista</th>
+                  <th>Tipo</th>
+                  <th>Horario</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let exc of excepciones">
+                  <td>{{ formatDate(exc.date) }}</td>
+                  <td>{{ exc.stylistName || 'Todos' }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="{
+                      'bg-success': exc.type === 'DISPONIBLE',
+                      'bg-danger': exc.type === 'NO_DISPONIBLE'
+                    }">
+                      {{ exc.type }}
+                    </span>
+                  </td>
+                  <td>{{ exc.startTime && exc.endTime ? (exc.startTime + ' - ' + exc.endTime) : 'Todo el día' }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarExcepcion(exc.scheduleExceptionId)">
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
